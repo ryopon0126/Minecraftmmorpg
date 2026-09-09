@@ -14,7 +14,7 @@
     --sidebar-active:rgba(255,255,255,.09);
     --sidebar-border:rgba(255,255,255,.07);
     --sidebar-ring:rgba(255,255,255,.18);
-
+ 
     --bg:#ede9e0;
     --surface:#fbfaf6;
     --surface-2:#f2eee3;
@@ -24,30 +24,30 @@
     --text:#2a2721;
     --text-muted:#71695a;
     --text-faint:#9c937e;
-
+ 
     --accent:#3d6fa6;
     --accent-strong:#2e5883;
     --accent-soft:#e3ecf5;
     --on-accent:#ffffff;
-
+ 
     --danger:#b4373f;
     --danger-soft:#f6e3e2;
     --danger-strong:#8f2b31;
-
+ 
     --cat-job:#7c5cbf;       --cat-job-soft:#ece7f7;
     --cat-monster:#b4373f;   --cat-monster-soft:#f6e3e2;
     --cat-material:#9c7248;  --cat-material-soft:#efe6da;
     --cat-weapon:#3e8e92;    --cat-weapon-soft:#e2eff0;
     --cat-armor:#2f8f5b;     --cat-armor-soft:#e2f0e8;
     --cat-item:#c98f14;      --cat-item-soft:#f6ecd6;
-
+ 
     --shadow-sm:0 1px 2px rgba(30,26,16,.06), 0 1px 1px rgba(30,26,16,.04);
     --shadow-md:0 6px 20px rgba(30,26,16,.10), 0 2px 6px rgba(30,26,16,.06);
     --radius-sm:4px;
     --radius-md:8px;
     --radius-lg:14px;
   }
-
+ 
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
       --bg:#1c1d21;
@@ -59,23 +59,23 @@
       --text:#e9e7e0;
       --text-muted:#a7a59c;
       --text-faint:#716f68;
-
+ 
       --accent:#74a4da;
       --accent-strong:#95bce4;
       --accent-soft:rgba(116,164,218,.16);
       --on-accent:#0f1620;
-
+ 
       --danger:#e37078;
       --danger-soft:rgba(227,112,120,.16);
       --danger-strong:#ef9298;
-
+ 
       --cat-job:#ac91e2;       --cat-job-soft:rgba(172,145,226,.16);
       --cat-monster:#e37078;   --cat-monster-soft:rgba(227,112,120,.16);
       --cat-material:#c8a077;  --cat-material-soft:rgba(200,160,119,.16);
       --cat-weapon:#63bdc1;    --cat-weapon-soft:rgba(99,189,193,.16);
       --cat-armor:#5fc78d;     --cat-armor-soft:rgba(95,199,141,.16);
       --cat-item:#e8bf63;      --cat-item-soft:rgba(232,191,99,.16);
-
+ 
       --shadow-sm:0 1px 2px rgba(0,0,0,.3);
       --shadow-md:0 10px 26px rgba(0,0,0,.4);
     }
@@ -90,27 +90,27 @@
     --text:#e9e7e0;
     --text-muted:#a7a59c;
     --text-faint:#716f68;
-
+ 
     --accent:#74a4da;
     --accent-strong:#95bce4;
     --accent-soft:rgba(116,164,218,.16);
     --on-accent:#0f1620;
-
+ 
     --danger:#e37078;
     --danger-soft:rgba(227,112,120,.16);
     --danger-strong:#ef9298;
-
+ 
     --cat-job:#ac91e2;       --cat-job-soft:rgba(172,145,226,.16);
     --cat-monster:#e37078;   --cat-monster-soft:rgba(227,112,120,.16);
     --cat-material:#c8a077;  --cat-material-soft:rgba(200,160,119,.16);
     --cat-weapon:#63bdc1;    --cat-weapon-soft:rgba(99,189,193,.16);
     --cat-armor:#5fc78d;     --cat-armor-soft:rgba(95,199,141,.16);
     --cat-item:#e8bf63;      --cat-item-soft:rgba(232,191,99,.16);
-
+ 
     --shadow-sm:0 1px 2px rgba(0,0,0,.3);
     --shadow-md:0 10px 26px rgba(0,0,0,.4);
   }
-
+ 
   *,*::before,*::after{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
@@ -125,16 +125,16 @@
   ::-webkit-scrollbar{width:10px;height:10px;}
   ::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:6px;}
   ::-webkit-scrollbar-track{background:transparent;}
-
+ 
   a{color:inherit;}
   button{font-family:inherit;}
   :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px;}
-
+ 
   .num{font-family:"JetBrains Mono",monospace;font-variant-numeric:tabular-nums;}
-
+ 
   /* ---------- layout ---------- */
   .app{display:flex;min-height:100vh;}
-
+ 
   .sidebar{
     width:230px;flex:0 0 230px;
     background:var(--sidebar-bg);
@@ -148,7 +148,7 @@
   .brand-text{display:flex;flex-direction:column;line-height:1.15;}
   .brand-name{font-family:"Silkscreen",monospace;font-size:14px;letter-spacing:.5px;color:#f1efe8;}
   .brand-sub{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:1.5px;color:var(--sidebar-text-dim);margin-top:3px;}
-
+ 
   .nav{display:flex;flex-direction:column;gap:2px;margin-top:4px;}
   .nav-section-label{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:1.5px;color:var(--sidebar-text-dim);padding:14px 10px 6px;}
   .nav-item{
@@ -168,11 +168,11 @@
     background:rgba(255,255,255,.06);border-radius:999px;padding:1px 7px;min-width:20px;text-align:center;
   }
   .nav-item.active .nav-count{color:#fff;}
-
+ 
   .sidebar-foot{margin-top:auto;padding:14px 10px 2px;border-top:1px solid var(--sidebar-border);}
   .sidebar-foot-text{font-size:11px;color:var(--sidebar-text-dim);line-height:1.5;}
   .sidebar-foot-text b{color:var(--sidebar-text);font-weight:600;}
-
+ 
   .main{flex:1;min-width:0;display:flex;flex-direction:column;}
   .topbar{
     display:flex;align-items:center;gap:16px;flex-wrap:wrap;
@@ -184,7 +184,7 @@
   .view-title{font-size:21px;font-weight:800;letter-spacing:.2px;text-wrap:balance;}
   .topbar-spacer{flex:1;}
   .content{padding:26px 32px 60px;flex:1;min-width:0;}
-
+ 
   /* ---------- buttons / controls ---------- */
   .btn{
     display:inline-flex;align-items:center;gap:7px;
@@ -203,21 +203,21 @@
   .btn-danger:hover{background:var(--danger-soft);border-color:var(--danger);}
   .btn-sm{padding:5px 10px;font-size:12px;}
   .btn[disabled]{opacity:.5;cursor:not-allowed;}
-
+ 
   .segmented{display:inline-flex;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);padding:3px;gap:2px;}
   .seg-btn{
     padding:7px 16px;border-radius:6px;border:none;background:transparent;color:var(--text-muted);
     font-size:13px;font-weight:700;cursor:pointer;
   }
   .seg-btn.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow-sm);}
-
+ 
   .search-wrap{position:relative;flex:0 1 260px;min-width:160px;}
   .search-input{
     width:100%;padding:8px 12px 8px 32px;border-radius:var(--radius-sm);
     border:1px solid var(--border-strong);background:var(--surface);color:var(--text);font-size:13px;
   }
   .search-icon{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text-faint);pointer-events:none;}
-
+ 
   /* ---------- overview ---------- */
   .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:30px;}
   .stat-tile{
@@ -230,30 +230,30 @@
   .stat-tile-icon{color:var(--tile-accent);}
   .stat-tile-count{font-family:"JetBrains Mono",monospace;font-size:26px;font-weight:600;line-height:1;}
   .stat-tile-label{font-size:12.5px;color:var(--text-muted);font-weight:600;}
-
+ 
   .section-heading{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 12px;}
   .section-heading h2{font-size:15px;font-weight:800;margin:0;}
   .section-heading .hint{font-size:12px;color:var(--text-faint);}
-
+ 
   .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;}
-
+ 
   .recent-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:14px;align-items:center;padding:11px 16px;border-bottom:1px solid var(--border);}
   .recent-row:last-child{border-bottom:none;}
   .recent-row:hover{background:var(--surface-2);}
   .recent-name{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .recent-sub{font-size:12px;color:var(--text-faint);font-family:"JetBrains Mono",monospace;}
-
+ 
   .badge-cat{
     display:inline-flex;align-items:center;gap:5px;
     font-size:11px;font-weight:700;padding:3px 8px 3px 6px;border-radius:999px;
     background:var(--cat-soft);color:var(--cat-color);white-space:nowrap;
   }
   .badge-cat .dot{width:6px;height:6px;border-radius:50%;background:var(--cat-color);}
-
+ 
   .empty-state{padding:46px 20px;text-align:center;color:var(--text-faint);}
   .empty-state-icon{color:var(--border-strong);margin-bottom:10px;}
   .empty-state b{color:var(--text-muted);}
-
+ 
   /* ---------- forms ---------- */
   .form-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px 28px 22px;max-width:840px;}
   .form-mode-tag{display:inline-flex;align-items:center;gap:6px;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:1px;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:999px;margin-bottom:14px;}
@@ -272,7 +272,7 @@
   .field-error{font-size:11.5px;color:var(--danger);display:none;}
   .field.invalid input,.field.invalid textarea{border-color:var(--danger);}
   .field.invalid .field-error{display:block;}
-
+ 
   .repeat-list{display:flex;flex-direction:column;gap:8px;}
   .repeat-row{display:flex;gap:8px;align-items:flex-start;}
   .repeat-row input{flex:1;min-width:0;}
@@ -283,11 +283,11 @@
   }
   .row-remove:hover{background:var(--danger-soft);color:var(--danger);border-color:var(--danger);}
   .row-add{align-self:flex-start;margin-top:2px;}
-
+ 
   .form-actions{display:flex;align-items:center;gap:10px;margin-top:24px;padding-top:18px;border-top:1px solid var(--border);}
   .form-actions .spacer{flex:1;}
   .save-note{font-size:12px;color:var(--text-faint);}
-
+ 
   /* ---------- table ---------- */
   .table-toolbar{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
   .table-toolbar .spacer{flex:1;}
@@ -314,7 +314,7 @@
   .pair-chip:last-child{margin-bottom:0;}
   .pair-chip .pn{font-weight:700;font-size:12.5px;}
   .pair-chip .pd{color:var(--text-muted);font-size:12px;white-space:pre-wrap;}
-
+ 
   /* ---------- toast / confirm ---------- */
   .toast-wrap{position:fixed;bottom:22px;right:22px;display:flex;flex-direction:column;gap:8px;z-index:100;}
   .toast{
@@ -324,18 +324,18 @@
   }
   .toast.err{background:var(--danger);color:#fff;}
   @keyframes toast-in{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
-
+ 
   .modal-veil{position:fixed;inset:0;background:rgba(20,18,12,.42);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px;}
   .confirm-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;max-width:360px;box-shadow:var(--shadow-md);}
   .confirm-card h3{margin:0 0 8px;font-size:15px;}
   .confirm-card p{margin:0 0 18px;font-size:13px;color:var(--text-muted);}
   .confirm-actions{display:flex;justify-content:flex-end;gap:8px;}
-
+ 
   @media (prefers-reduced-motion: reduce){
     .toast{animation:none;}
     .stat-tile{transition:none;}
   }
-
+ 
   @media (max-width: 880px){
     .sidebar{width:70px;flex-basis:70px;padding:16px 8px;}
     .brand-text,.nav-label,.nav-count,.nav-section-label,.sidebar-foot{display:none;}
@@ -345,7 +345,7 @@
     .content{padding:20px 16px 50px;}
     .topbar{padding:18px 16px;}
   }
-
+ 
   /* ---------- setup banner (shown until firebaseConfig is filled in) ---------- */
   .setup-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px;}
   .setup-card{max-width:560px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px 34px;box-shadow:var(--shadow-md);}
@@ -361,7 +361,7 @@
 </style>
 </head>
 <body>
-
+ 
 <div class="app" id="app">
   <aside class="sidebar" id="sidebar"></aside>
   <main class="main">
@@ -372,14 +372,14 @@
 <div class="toast-wrap" id="toastWrap"></div>
 <div id="modalRoot"></div>
 <div class="db-status" id="dbStatus"><span class="dot"></span><span id="dbStatusText">接続中…</span></div>
-
+ 
 <script type="module">
 const FIREBASE_APP_URL = "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 const FIREBASE_FIRESTORE_URL = "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 /* Firebase SDKs are loaded dynamically (see initDb below) instead of via a
    static top-level import, so a network hiccup or an unfilled config can't
    crash the whole module before the rest of the page has a chance to render. */
-
+ 
 /* =====================================================================
    Firebase設定
    Firebaseコンソール（プロジェクトの設定 > 全般 > マイアプリ）で発行される
@@ -395,10 +395,10 @@ const firebaseConfig = {
   appId: "1:40521989721:web:d6bf881d12344f171cbb48"
 };
 const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
-
+ 
 (function(){
   "use strict";
-
+ 
   /* ===================== pixel icon system ===================== */
   function pixelIcon(matrix, size){
     size = size || 20;
@@ -421,7 +421,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     plus: [[0,0,1,0,0],[0,0,1,0,0],[1,1,1,1,1],[0,0,1,0,0],[0,0,1,0,0]],
     search: [[1,1,1,0,0],[1,0,1,0,0],[1,1,1,0,0],[0,0,0,1,0],[0,0,0,0,1]]
   };
-
+ 
   /* ===================== schema ===================== */
   var CATS = [
     {key:'job',      collection:'jobs',      label:'ジョブ',       en:'JOB',      icon:'job'},
@@ -432,7 +432,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     {key:'item',     collection:'items',     label:'アイテム',     en:'ITEM',     icon:'item'}
   ];
   var CAT_BY_KEY = {}; CATS.forEach(function(c){ CAT_BY_KEY[c.key]=c; });
-
+ 
   var SCHEMAS = {
     job: [
       {key:'name', label:'ジョブ名', type:'text', required:true},
@@ -478,7 +478,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       {key:'notes', label:'備考欄', type:'textarea', full:true}
     ]
   };
-
+ 
   /* ===================== state ===================== */
   var state = {
     db: null,
@@ -491,7 +491,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     sort: {}
   };
   CATS.forEach(function(c){ state.search[c.key]=''; state.sort[c.key]='name'; });
-
+ 
   /* ===================== utils ===================== */
   function esc(s){
     return String(s==null?'':s).replace(/[&<>"']/g, function(m){
@@ -537,20 +537,22 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     if(/[",\n]/.test(v)) v = '"'+v.replace(/"/g,'""')+'"';
     return v;
   }
+  function pairName(p){ return p ? (p.n!==undefined ? p.n : (p[0]||'')) : ''; }
+  function pairDesc(p){ return p ? (p.d!==undefined ? p.d : (p[1]||'')) : ''; }
   function fieldToText(field, val){
     if(val==null) return '';
     if(field.type==='list') return (val||[]).filter(Boolean).join(' / ');
-    if(field.type==='pairlist') return (val||[]).filter(function(p){return p&&(p[0]||p[1]);}).map(function(p){return p[0]+'：'+p[1];}).join(' / ');
+    if(field.type==='pairlist') return (val||[]).filter(function(p){return p&&(pairName(p)||pairDesc(p));}).map(function(p){return pairName(p)+'：'+pairDesc(p);}).join(' / ');
     return val;
   }
-
+ 
   /* ===================== render dispatch ===================== */
   function render(){
     renderSidebar();
     renderTopbar();
     renderContent();
   }
-
+ 
   function renderSidebar(){
     var sb = document.getElementById('sidebar');
     var html = '<div class="brand">'+
@@ -583,7 +585,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       (count==null?'':'<span class="nav-count">'+count+'</span>')+
       '</button>';
   }
-
+ 
   function renderTopbar(){
     var tb = document.getElementById('topbar');
     if(state.view==='overview'){
@@ -609,7 +611,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       html += '<button class="btn btn-primary" id="newEntryBtn">'+pixelIcon(ICONS.plus,14)+'&nbsp; 新規登録</button>';
     }
     tb.innerHTML = html;
-
+ 
     tb.querySelectorAll('[data-mode]').forEach(function(b){
       b.addEventListener('click', function(){
         state.mode = b.getAttribute('data-mode');
@@ -626,7 +628,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     var ex = tb.querySelector('#exportCsv');
     if(ex){ ex.addEventListener('click', function(){ exportCsv(cat); }); }
   }
-
+ 
   function renderContent(){
     var c = document.getElementById('content');
     if(state.view==='overview'){ c.innerHTML=''; c.appendChild(buildOverview()); return; }
@@ -638,7 +640,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       c.appendChild(buildTable(cat));
     }
   }
-
+ 
   /* ===================== overview ===================== */
   function buildOverview(){
     var wrap = document.createElement('div');
@@ -651,7 +653,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
         '</div>';
     });
     grid += '</div>';
-
+ 
     var all = [];
     CATS.forEach(function(c){
       state.entries[c.key].forEach(function(e){ all.push({cat:c, entry:e}); });
@@ -660,7 +662,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       return (b.entry.updatedAt||'').localeCompare(a.entry.updatedAt||'');
     });
     var recent = all.slice(0,10);
-
+ 
     var recentHtml = '<div class="section-heading"><h2>最近の更新</h2><span class="hint">全'+all.length+'件</span></div><div class="panel">';
     if(recent.length===0){
       recentHtml += '<div class="empty-state"><div class="empty-state-icon">'+pixelIcon(ICONS.overview,30)+'</div>まだ登録されたアイデアがありません。<br>左のメニューからカテゴリを選び、<b>登録</b>タブから追加してください。</div>';
@@ -675,7 +677,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       });
     }
     recentHtml += '</div>';
-
+ 
     wrap.innerHTML = grid + recentHtml;
     wrap.querySelectorAll('[data-goto]').forEach(function(t){
       t.addEventListener('click', function(){ state.view=t.getAttribute('data-goto'); state.mode='browse'; render(); });
@@ -689,32 +691,32 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     });
     return wrap;
   }
-
+ 
   /* ===================== form ===================== */
   function buildForm(cat){
     var schema = SCHEMAS[cat.key];
     var editing = state.editingId ? findEntry(cat.key, state.editingId) : null;
     var panel = document.createElement('div');
     panel.className = 'form-panel';
-
+ 
     var tagHtml = '<div class="form-mode-tag" style="--accent:var(--cat-'+cat.key+');background:var(--cat-'+cat.key+'-soft);color:var(--cat-'+cat.key+')">'+
       pixelIcon(ICONS[cat.icon],13)+'&nbsp; '+(editing?esc(cat.label)+'を編集':'新規'+esc(cat.label)+'を登録')+'</div>';
-
+ 
     var gridHtml = '<div class="form-grid">';
     schema.forEach(function(f){
       gridHtml += renderFieldShell(f);
     });
     gridHtml += '</div>';
-
+ 
     var actionsHtml = '<div class="form-actions">'+
       '<button type="button" class="btn btn-primary" id="submitBtn">'+(editing?'更新する':'登録する')+'</button>'+
       '<button type="button" class="btn btn-ghost" id="clearBtn">'+(editing?'キャンセル':'フォームをクリア')+'</button>'+
       '<div class="spacer"></div>'+
       (editing?'<span class="save-note">最終更新：'+fmtDate(editing.updatedAt)+'</span>':'')+
       '</div>';
-
+ 
     panel.innerHTML = tagHtml + '<form id="entryForm" novalidate>' + gridHtml + '</form>' + actionsHtml;
-
+ 
     // populate repeatable fields + plain values
     schema.forEach(function(f){
       var fieldEl = panel.querySelector('[data-field-wrap="'+f.key+'"]');
@@ -726,9 +728,9 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
         fieldEl.querySelector('.row-add').addEventListener('click', function(){ listRoot.appendChild(makeListRow('')); listRoot.lastElementChild.querySelector('input').focus(); });
       } else if(f.type==='pairlist'){
         var pairValues = editing ? (editing[f.key]||[]) : [];
-        if(pairValues.length===0) pairValues=[['','']];
+        if(pairValues.length===0) pairValues=[{n:'',d:''}];
         var pairRoot = fieldEl.querySelector('.repeat-list');
-        pairValues.forEach(function(p){ pairRoot.appendChild(makePairRow(p[0]||'',p[1]||'',f.pairLabels)); });
+        pairValues.forEach(function(p){ pairRoot.appendChild(makePairRow(pairName(p),pairDesc(p),f.pairLabels)); });
         fieldEl.querySelector('.row-add').addEventListener('click', function(){ pairRoot.appendChild(makePairRow('','',f.pairLabels)); pairRoot.lastElementChild.querySelector('input').focus(); });
       } else if(f.type==='textarea'){
         fieldEl.querySelector('textarea').value = editing ? (editing[f.key]||'') : '';
@@ -736,14 +738,14 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
         fieldEl.querySelector('input').value = editing ? (editing[f.key]||'') : '';
       }
     });
-
+ 
     panel.querySelector('#submitBtn').addEventListener('click', function(){ submitForm(cat, schema, panel, editing); });
     panel.querySelector('#clearBtn').addEventListener('click', function(){
       if(editing){ state.editingId=null; render(); } else { state.mode='register'; state.editingId=null; render(); }
     });
     return panel;
   }
-
+ 
   function renderFieldShell(f){
     var reqMark = f.required ? '<span class="field-required">*</span>' : '';
     var help = f.help ? '<div class="field-help">'+esc(f.help)+'</div>' : '';
@@ -782,7 +784,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     });
     return row;
   }
-
+ 
   function submitForm(cat, schema, panel, editing){
     var data = {};
     var valid = true;
@@ -796,43 +798,54 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       } else if(f.type==='list'){
         data[f.key] = Array.prototype.slice.call(wrap.querySelectorAll('.repeat-row input')).map(function(i){return i.value.trim();}).filter(Boolean);
       } else if(f.type==='pairlist'){
+        // Stored as an array of {n,d} objects rather than [name,desc] tuples:
+        // Firestore does not allow an array to contain another array directly.
         data[f.key] = Array.prototype.slice.call(wrap.querySelectorAll('.pair-row')).map(function(r){
           var ins = r.querySelectorAll('input');
-          return [ins[0].value.trim(), ins[1].value.trim()];
-        }).filter(function(p){ return p[0]||p[1]; });
+          return {n: ins[0].value.trim(), d: ins[1].value.trim()};
+        }).filter(function(p){ return p.n||p.d; });
       }
       if(f.required && !data[f.key]){ wrap.classList.add('invalid'); valid=false; }
     });
     if(!valid){ toast('必須項目を入力してください', true); return; }
     if(!state.db){ toast('データベースに接続できません', true); return; }
-
+ 
     var now = new Date().toISOString();
     var btn = panel.querySelector('#submitBtn');
     btn.disabled = true;
     var coll = state.db.collection(cat.collection);
-    var p;
-    if(editing){
-      data.updatedAt = now;
-      p = coll.doc(editing.id).set(Object.assign({}, editing, data, {createdAt: editing.createdAt||now}));
-    } else {
-      data.createdAt = now; data.updatedAt = now;
-      p = coll.add(data);
-    }
-    p.then(function(){
-      toast((editing?esc(cat.label)+'を更新しました':esc(cat.label)+'を登録しました'));
-      state.mode='browse'; state.editingId=null; render();
-    }).catch(function(err){
+    try{
+      var p;
+      if(editing){
+        data.updatedAt = now;
+        p = coll.doc(editing.id).set(Object.assign({}, editing, data, {createdAt: editing.createdAt||now}));
+      } else {
+        data.createdAt = now; data.updatedAt = now;
+        p = coll.add(data);
+      }
+      p.then(function(){
+        toast((editing?esc(cat.label)+'を更新しました':esc(cat.label)+'を登録しました'));
+        state.mode='browse'; state.editingId=null; render();
+      }).catch(function(err){
+        btn.disabled = false;
+        toast('保存に失敗しました：'+(err&&err.message?err.message:'unknown error'), true);
+        console.error('save error:', err);
+      });
+    }catch(err){
+      // Some Firestore SDK validation errors (e.g. malformed data) throw
+      // synchronously instead of rejecting the promise above.
       btn.disabled = false;
       toast('保存に失敗しました：'+(err&&err.message?err.message:'unknown error'), true);
-    });
+      console.error('save error (sync):', err);
+    }
   }
-
+ 
   /* ===================== table ===================== */
   function buildTable(cat){
     var schema = SCHEMAS[cat.key];
     var wrap = document.createElement('div');
     wrap.className = 'panel';
-
+ 
     var list = state.entries[cat.key].slice();
     var q = (state.search[cat.key]||'').toLowerCase();
     if(q){
@@ -847,14 +860,14 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       if(state.sort[cat.key]==='updated'){ return (b.updatedAt||'').localeCompare(a.updatedAt||''); }
       return String(a.name||'').localeCompare(String(b.name||''),'ja');
     });
-
+ 
     var toolbar = '<div class="table-toolbar">'+
       '<button class="btn btn-ghost btn-sm" data-sort="name">名前順</button>'+
       '<button class="btn btn-ghost btn-sm" data-sort="updated">更新順</button>'+
       '<div class="spacer"></div>'+
       '<span class="row-count">'+list.length+' / '+state.entries[cat.key].length+' 件表示</span>'+
       '</div>';
-
+ 
     if(list.length===0){
       wrap.innerHTML = toolbar + '<div class="empty-state"><div class="empty-state-icon">'+pixelIcon(ICONS[cat.icon],30)+'</div>'+
         (state.entries[cat.key].length===0
@@ -881,7 +894,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       tbody += '</tbody>';
       wrap.innerHTML = toolbar + '<div class="table-scroll"><table class="data-table">'+thead+tbody+'</table></div>';
     }
-
+ 
     wrap.querySelectorAll('[data-sort]').forEach(function(b){
       b.addEventListener('click', function(){ state.sort[cat.key]=b.getAttribute('data-sort'); renderContent(); });
     });
@@ -902,7 +915,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     });
     return wrap;
   }
-
+ 
   function renderCell(f, val, isName){
     if(f.type==='list'){
       var items = val||[];
@@ -911,17 +924,17 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       return '<td><div class="cell-scroll">'+chips+'</div></td>';
     }
     if(f.type==='pairlist'){
-      var pairs = (val||[]).filter(function(p){return p&&(p[0]||p[1]);});
+      var pairs = (val||[]).filter(function(p){return p&&(pairName(p)||pairDesc(p));});
       if(pairs.length===0) return '<td class="cell-muted">—</td>';
       var html = pairs.map(function(p){
-        return '<div class="pair-chip"><div class="pn">'+esc(p[0])+'</div><div class="pd">'+esc(p[1])+'</div></div>';
+        return '<div class="pair-chip"><div class="pn">'+esc(pairName(p))+'</div><div class="pd">'+esc(pairDesc(p))+'</div></div>';
       }).join('');
       return '<td><div class="cell-scroll">'+html+'</div></td>';
     }
     if(!val) return '<td class="cell-muted">'+(isName?'(名称未設定)':'—')+'</td>';
     return '<td class="'+(isName?'cell-name':'cell-wrap')+'">'+esc(val)+'</td>';
   }
-
+ 
   function exportCsv(cat){
     var schema = SCHEMAS[cat.key];
     var rows = [schema.map(function(f){return csvCell(f.label);}).concat(['更新日']).join(',')];
@@ -939,13 +952,13 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
     toast('CSVを書き出しました');
   }
-
+ 
   function findEntry(catKey, id){
     var list = state.entries[catKey];
     for(var i=0;i<list.length;i++){ if(list[i].id===id) return list[i]; }
     return null;
   }
-
+ 
   /* ===================== db wiring (Firestore) =====================
      A thin shim that mirrors the collection()/doc()/add()/set()/delete()/
      onSnapshot() shape the rest of this file already expects, so the
@@ -975,14 +988,14 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       }
     };
   }
-
+ 
   function setDbStatus(cls, text){
     var el = document.getElementById('dbStatus');
     if(!el) return;
     el.className = 'db-status'+(cls?' '+cls:'');
     document.getElementById('dbStatusText').textContent = text;
   }
-
+ 
   async function initDb(){
     setDbStatus('', 'Firebaseに接続中…');
     try{
@@ -1011,7 +1024,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       toast('Firebaseへの接続に失敗しました。firebaseConfigとネットワーク接続を確認してください。', true);
     }
   }
-
+ 
   render();
   if(FIREBASE_NOT_CONFIGURED){
     document.getElementById('app').style.display = 'block';
