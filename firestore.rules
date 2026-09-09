@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 「リンクを知っていれば誰でも編集可」という要望に合わせた設定です。
+    // 認証なしで誰でも読み書きできます（= URLとFirebase設定値さえ分かれば
+    // 誰でもデータの閲覧・追加・削除が可能）。社外に漏れないよう管理してください。
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
