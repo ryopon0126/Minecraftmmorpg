@@ -382,6 +382,19 @@
     max-height:50vh;overflow-y:auto;margin-bottom:18px;background:var(--surface-2);
     border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;
   }
+  .yaml-card{max-width:720px;width:100%;}
+  .yaml-warn{
+    font-size:12.3px;line-height:1.7;color:var(--text);background:var(--accent-soft);
+    border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;margin-bottom:12px;
+  }
+  .yaml-warn b{color:var(--accent-strong);}
+  .yaml-textarea{
+    width:100%;min-height:360px;max-height:52vh;resize:vertical;box-sizing:border-box;
+    font-family:"JetBrains Mono",monospace;font-size:12px;line-height:1.65;white-space:pre;
+    background:var(--surface-2);color:var(--text);
+    border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;
+  }
+  .yaml-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;}
 
   @media (prefers-reduced-motion: reduce){
     .toast{animation:none;}
@@ -485,6 +498,8 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     {key:'item',     collection:'items',     label:'アイテム',     en:'ITEM',     icon:'item'}
   ];
   var CAT_BY_KEY = {}; CATS.forEach(function(c){ CAT_BY_KEY[c.key]=c; });
+  var MMOITEMS_CAT_KEYS = {material:1, weapon:1, armor:1};
+  function isMmoItemsCat(key){ return !!MMOITEMS_CAT_KEYS[key]; }
 
   var TAG_FIELD = {key:'tags', label:'タグ', type:'tags', full:true, help:'既存のタグ候補から選ぶか、新しいタグを入力してEnterで追加できます。'};
   var RECIPE_FIELD = {key:'recipe', label:'製作素材', type:'recipe', full:true, help:'「素材」に登録した項目から選び、必要な個数を入力してください。先に素材を登録しておくと選べるようになります。'};
@@ -629,6 +644,186 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     state.entries[catKey].forEach(function(e){ (e.tags||[]).forEach(function(t){ set[t]=true; }); });
     return Object.keys(set).sort(function(a,b){ return a.localeCompare(b,'ja'); });
   }
+
+  /* ===================== MMOItems YAML export =====================
+     素材・武器・防具のデータを、MMOItemsプラグイン（plugins/MMOItems/item/<タイプ>/*.yml）に
+     貼り付けやすいYAML形式へ変換する。
+
+     公式ドキュメント(docs.phoenixdevt.fr/mmoitems)で確認が取れた範囲：
+       - アイテムはタイプ別フォルダ(item/<TYPE>/*.yml)内にIDをキーとして定義する
+       - material: にMinecraftのアイテムID（例: DIAMOND_SWORD）を指定する
+       - name: が表示名、lore: が説明文（&でカラーコード）
+       - ステータスのキー名: attack-damage / attack-speed / critical-strike-chance /
+         max-mana / weapon-damage / defense / max-health / required-level
+
+     一方で、以下は公式ドキュメントで断定できる一次情報を確認しきれなかったため、
+     憶測で書式を作らず「コメント」として出力し、手動設定を促す形にしている：
+       - アビリティ（スキル）と発動トリガーの紐付け方
+       - Crafting Station（製作レシピ）のYAML定義
+       - セットボーナス（item-sets.yml）の定義
+       - ステータス値が単一値か base/spread 形式か
+       - アイテムの具体的なMMOItemsタイプ（SWORD/AXE/BOWなど）とMinecraft material ID
+     これらは実際にMMOItemsのドキュメント／サーバーで確認しながら書き換えてください。
+  */
+  var YAML_TYPE_HINT = { material:'MATERIAL', weapon:'（例: SWORD/AXE/BOW など、武器の種類に合わせて選択）', armor:'（例: HELMET/CHESTPLATE/LEGGINGS/BOOTS など）' };
+  var JP_STAT_PATTERNS = [
+    {key:'attack-damage',        label:'攻撃力',        re:/(攻撃力|物理攻撃力?|ダメージ)\s*[:：]?\s*[+＋]?\s*(-?\d+(?:\.\d+)?)/},
+    {key:'attack-speed',         label:'攻撃速度',      re:/(攻撃速度|攻速)\s*[:：]?\s*[+＋]?\s*(-?\d+(?:\.\d+)?)/},
+    {key:'critical-strike-chance', label:'クリティカル率', re:/(クリティカル率?|会心率?|クリ率)\s*[:：]?\s*[+＋]?\s*(-?\d+(?:\.\d+)?)/},
+    {key:'max-mana',             label:'魔力/MP',       re:/(最大マナ|魔力|MP)\s*[:：]?\s*[+＋]?\s*(-?\d+(?:\.\d+)?)/},
+    {key:'weapon-damage',        label:'武器ダメージ',  re:/(武器ダメージ|弓ダメージ)\s*[:：]?\s*[+＋]?\s*(-?\d+(?:\.\d+)?)/},
+    {key:'defense',              label:'防御力',        re:/(防御力|防御)\s*[:：]?\s*[+＋]?\s*(-?\d+(?:\.\d+)?)/},
+    {key:'max-health',           label:'体力/HP',       re:/(最大体力|最大HP|体力|HP)\s*[:：]?\s*[+＋]?\s*(-?\d+(?:\.\d+)?)/},
+    {key:'required-level',       label:'必要レベル',    re:/(必要レベル|レベル制限|Lv\.?)\s*[:：]?\s*[+＋]?\s*(-?\d+(?:\.\d+)?)/}
+  ];
+  function parseSubstats(list){
+    var stats = [], unmatched = [];
+    (list||[]).filter(Boolean).forEach(function(raw){
+      var matched = null;
+      for(var i=0;i<JP_STAT_PATTERNS.length;i++){
+        var p = JP_STAT_PATTERNS[i];
+        var m = raw.match(p.re);
+        if(m){ matched = {key:p.key, label:p.label, value:m[2], raw:raw}; break; }
+      }
+      if(matched) stats.push(matched); else unmatched.push(raw);
+    });
+    return {stats:stats, unmatched:unmatched};
+  }
+  function yq(s){ return "'"+String(s==null?'':s).replace(/'/g,"''")+"'"; }
+  function slugId(name, id){
+    var base = String(name||'').toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+    var suffix = String(id||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(-4);
+    return (base||'ITEM')+(suffix?'_'+suffix:'');
+  }
+  function buildMmoItemsYaml(cat, entry){
+    var lines = [];
+    var slug = slugId(entry.name, entry.id);
+    lines.push('# ==================================================================');
+    lines.push('# '+(entry.name||'(名称未設定)')+'   ['+cat.label+']');
+    lines.push('# 保存先の目安: plugins/MMOItems/item/<タイプ>/*.yml');
+    lines.push('# タイプの目安: '+YAML_TYPE_HINT[cat.key]);
+    lines.push('# <...> の部分は自動生成できなかったため、実際の値に置き換えてください。');
+    lines.push('# ==================================================================');
+    lines.push(slug+':');
+    lines.push('  id: '+slug);
+    lines.push('  material: <MATERIAL_ID> # 例: DIAMOND_SWORD, IRON_INGOT など、対応するMinecraftアイテムIDに置き換える');
+    lines.push('  display-name: '+yq('&6'+(entry.name||'')));
+
+    var lore = [];
+    if(cat.key!=='material' && entry.equipJob) lore.push('&7装備ジョブ: '+entry.equipJob);
+    if(entry.appearance) lore.push('&7見た目: '+entry.appearance);
+    if(cat.key==='material' && entry.derivedTo) lore.push('&7派生先: '+entry.derivedTo);
+    if(cat.key==='weapon' && entry.skills){
+      lore.push('');
+      lore.push('&c▶ スキル（要手動設定）');
+      String(entry.skills).split('\n').filter(Boolean).forEach(function(l){ lore.push('&7'+l); });
+    }
+    if(cat.key==='armor' && entry.setBonus){
+      lore.push('');
+      lore.push('&b▶ セットボーナス（要手動設定）');
+      String(entry.setBonus).split('\n').filter(Boolean).forEach(function(l){ lore.push('&7'+l); });
+    }
+    if(entry.notes){
+      lore.push('');
+      lore.push('&8備考: '+entry.notes);
+    }
+    if(lore.length){
+      lines.push('  lore:');
+      lore.forEach(function(l){ lines.push('  - '+yq(l)); });
+    }
+
+    var parsed = (cat.key!=='material') ? parseSubstats(entry.substats) : {stats:[],unmatched:[]};
+    if(parsed.stats.length){
+      lines.push('  # ステータス（数値が base/spread 形式か単一値かはMMOItems公式ドキュメントで要確認）');
+      parsed.stats.forEach(function(s){ lines.push('  '+s.key+': '+s.value+' # 元の入力: '+s.raw); });
+    }
+
+    var manual = [];
+    if(parsed.unmatched.length){
+      manual.push('自動変換できなかったサブステータス（手動でステータスキーを設定してください）:');
+      parsed.unmatched.forEach(function(u){ manual.push('  - '+u); });
+    }
+    if(cat.key!=='material' && entry.skills){
+      manual.push('スキル（アビリティ）は上記loreに転記していますが、実際の効果はMMOItemsの');
+      manual.push('Abilityシステムでトリガー（例: RIGHT_CLICK等）と紐付けて別途設定してください。');
+    }
+    var recipe = (entry.recipe||[]).filter(Boolean);
+    if(recipe.length){
+      manual.push('製作レシピ（Crafting Station機能で別途設定が必要です）:');
+      recipe.forEach(function(r){ manual.push('  - '+recipeLabel(r)); });
+    }
+    if(cat.key==='armor' && entry.setBonus){
+      manual.push('セットボーナスは上記loreに転記していますが、実際の効果は item-sets.yml 側で');
+      manual.push('別途設定してください。');
+    }
+    if(manual.length){
+      lines.push('  # ------------------------------------------------------------------');
+      lines.push('  # ▼ 以下は自動変換できなかった項目です。手動で設定してください。');
+      manual.forEach(function(m){ lines.push('  # '+m); });
+      lines.push('  # ------------------------------------------------------------------');
+    }
+    lines.push('');
+    return lines.join('\n');
+  }
+  function buildMmoItemsYamlBulk(cat, list){
+    var header = [
+      '# MMOItems 用 YAML書き出し — '+cat.label,
+      '# 生成日時: '+fmtDate(new Date().toISOString()),
+      '# 件数: '+list.length+' 件',
+      '#',
+      '# ご注意: このファイルはそのまま完璧に動く設定ではありません。',
+      '# <MATERIAL_ID> などのプレースホルダーや「自動変換できなかった項目」を',
+      '# 必ず確認・修正してから、種類ごとのフォルダ（item/<タイプ>/）に分けて配置してください。',
+      ''
+    ].join('\n');
+    return header + list.map(function(e){ return buildMmoItemsYaml(cat, e); }).join('\n');
+  }
+  function downloadTextFile(filename, text, mime){
+    var blob = new Blob([text], {type:(mime||'text/plain')+';charset=utf-8;'});
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+  function showYamlModal(title, yamlText, downloadName){
+    var root = document.getElementById('modalRoot');
+    var veil = el(
+      '<div class="modal-veil"><div class="confirm-card info-card yaml-card">'+
+      '<h3>'+esc(title)+'</h3>'+
+      '<div class="yaml-warn">この内容は<b>そのまま完璧な設定ではありません</b>。'+
+      '<code>&lt;MATERIAL_ID&gt;</code> 等のプレースホルダーや、末尾の「自動変換できなかった項目」コメントを確認し、'+
+      'MMOItems公式ドキュメントと照らし合わせてから plugins/MMOItems/item/&lt;タイプ&gt;/ 以下のymlファイルに反映してください。</div>'+
+      '<textarea class="yaml-textarea" readonly spellcheck="false">'+esc(yamlText)+'</textarea>'+
+      '<div class="confirm-actions yaml-actions">'+
+      '<button class="btn btn-ghost" data-act="download">'+esc(downloadName?downloadName+' としてダウンロード':'ダウンロード')+'</button>'+
+      '<button class="btn btn-ghost" data-act="copy">コピー</button>'+
+      '<button class="btn btn-primary" data-act="close">閉じる</button>'+
+      '</div></div></div>'
+    );
+    root.appendChild(veil);
+    function close(){ veil.remove(); }
+    veil.addEventListener('click', function(e){ if(e.target===veil) close(); });
+    veil.querySelector('[data-act=close]').addEventListener('click', close);
+    veil.querySelector('[data-act=copy]').addEventListener('click', function(){
+      var ta = veil.querySelector('.yaml-textarea');
+      ta.select();
+      var ok = false;
+      try{ ok = document.execCommand && document.execCommand('copy'); }catch(e){}
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(yamlText).then(function(){ toast('コピーしました'); }).catch(function(){ if(!ok) toast('コピーに失敗しました', true); });
+      } else if(ok){ toast('コピーしました'); } else { toast('コピーに失敗しました。手動で選択してコピーしてください。', true); }
+    });
+    if(downloadName){
+      veil.querySelector('[data-act=download]').addEventListener('click', function(){
+        downloadTextFile(downloadName, yamlText, 'text/yaml');
+        toast('ダウンロードしました');
+      });
+    } else {
+      veil.querySelector('[data-act=download]').style.display = 'none';
+    }
+  }
+
   function openDetailModal(title, bodyHtml){
     var root = document.getElementById('modalRoot');
     var veil = el(
@@ -719,6 +914,9 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     html += '<div class="topbar-spacer"></div>';
     if(state.mode==='browse'){
       html += '<button class="btn btn-ghost btn-sm" id="exportCsv">CSVエクスポート</button>';
+      if(isMmoItemsCat(cat.key)){
+        html += '<button class="btn btn-ghost btn-sm" id="exportYaml">MMOItems YAML書き出し</button>';
+      }
       html += '<button class="btn btn-primary" id="newEntryBtn">'+pixelIcon(ICONS.plus,14)+'&nbsp; 新規登録</button>';
     }
     tb.innerHTML = html;
@@ -738,6 +936,13 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     if(nb){ nb.addEventListener('click', function(){ state.mode='register'; state.editingId=null; render(); }); }
     var ex = tb.querySelector('#exportCsv');
     if(ex){ ex.addEventListener('click', function(){ exportCsv(cat); }); }
+    var ey = tb.querySelector('#exportYaml');
+    if(ey){ ey.addEventListener('click', function(){
+      var list = state.entries[cat.key];
+      if(list.length===0){ toast(cat.label+'がまだ登録されていません', true); return; }
+      var yamlText = buildMmoItemsYamlBulk(cat, list);
+      showYamlModal(cat.label+' 一括YAML書き出し（'+list.length+'件）', yamlText, cat.key+'_mmoitems.yml');
+    }); }
   }
 
   function renderContent(){
@@ -1074,6 +1279,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
         });
         tbody += '<td class="cell-muted num" style="white-space:nowrap">'+fmtDate(e.updatedAt)+'</td>';
         tbody += '<td class="cell-actions">'+
+          (isMmoItemsCat(cat.key) ? '<button class="btn btn-ghost btn-sm" data-yaml="'+e.id+'" title="MMOItems用YAMLを表示">YAML</button>' : '')+
           '<button class="btn btn-ghost btn-sm" data-edit="'+e.id+'">編集</button>'+
           '<button class="btn btn-danger btn-sm" data-del="'+e.id+'">削除</button>'+
           '</td>';
@@ -1115,6 +1321,15 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
         } else {
           showInfoModal(title, entry[fieldKey]||'');
         }
+      });
+    });
+    wrap.querySelectorAll('[data-yaml]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var id = b.getAttribute('data-yaml');
+        var entry = findEntry(cat.key, id);
+        if(!entry) return;
+        var yamlText = buildMmoItemsYaml(cat, entry);
+        showYamlModal((entry.name||'(名称未設定)')+' のMMOItems YAML', yamlText, slugId(entry.name, entry.id).toLowerCase()+'.yml');
       });
     });
     wrap.querySelectorAll('[data-edit]').forEach(function(b){
