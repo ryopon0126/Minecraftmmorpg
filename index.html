@@ -356,9 +356,9 @@
   .tag-pill-clear{color:var(--danger);border-color:transparent;background:transparent;}
   .tag-pill-clear:hover{background:var(--danger-soft);}
 
-  .cell-notes{cursor:pointer;max-width:220px;}
-  .cell-notes:hover .notes-open-hint{text-decoration:underline;}
-  .notes-preview{color:var(--text);white-space:pre-wrap;word-break:break-word;}
+  .cell-detail{cursor:pointer;max-width:220px;}
+  .cell-detail:hover .notes-open-hint{text-decoration:underline;}
+  .detail-preview{color:var(--text);white-space:pre-wrap;word-break:break-word;}
   .notes-open-hint{display:block;font-size:11.5px;color:var(--accent);font-weight:600;margin-top:4px;}
 
   /* ---------- toast / confirm ---------- */
@@ -494,9 +494,9 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       {key:'name', label:'ジョブ名', type:'text', required:true},
       TAG_FIELD,
       {key:'mainWeapon', label:'メイン武器', type:'text'},
-      {key:'skills', label:'スキル', type:'pairlist', pairLabels:['スキル名','スキル説明'], help:'スキル名と説明を1組の行として、必要なだけ追加できます。', full:true},
+      {key:'skills', label:'スキル', type:'pairlist', pairLabels:['スキル名','スキル説明'], help:'スキル名と説明を1組の行として、必要なだけ追加できます。', full:true, detail:true},
       {key:'jobDetail', label:'ジョブ詳細設定', type:'textarea', full:true},
-      {key:'notes', label:'備考欄', type:'textarea', full:true}
+      {key:'notes', label:'備考欄', type:'textarea', full:true, detail:true}
     ],
     monster: [
       {key:'name', label:'名前', type:'text', required:true},
@@ -504,8 +504,8 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       {key:'appearance', label:'見た目', type:'textarea'},
       {key:'hp', label:'体力', type:'text'},
       {key:'drops', label:'ドロップ品', type:'textarea'},
-      {key:'skills', label:'スキル', type:'textarea'},
-      {key:'notes', label:'備考欄', type:'textarea', full:true}
+      {key:'skills', label:'スキル', type:'textarea', detail:true},
+      {key:'notes', label:'備考欄', type:'textarea', full:true, detail:true}
     ],
     material: [
       {key:'name', label:'名前', type:'text', required:true},
@@ -513,17 +513,17 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       {key:'appearance', label:'見た目', type:'textarea'},
       {key:'derivedTo', label:'派生先', type:'textarea'},
       RECIPE_FIELD,
-      {key:'notes', label:'備考欄', type:'textarea', full:true}
+      {key:'notes', label:'備考欄', type:'textarea', full:true, detail:true}
     ],
     weapon: [
       {key:'name', label:'名前', type:'text', required:true},
       TAG_FIELD,
       {key:'equipJob', label:'装備ジョブ', type:'text'},
       {key:'appearance', label:'見た目', type:'textarea'},
-      {key:'skills', label:'スキル', type:'textarea'},
+      {key:'skills', label:'スキル', type:'textarea', detail:true},
       {key:'substats', label:'サブステータス', type:'list', help:'必要なだけ行を追加できます。', full:true},
       RECIPE_FIELD,
-      {key:'notes', label:'備考欄', type:'textarea', full:true}
+      {key:'notes', label:'備考欄', type:'textarea', full:true, detail:true}
     ],
     armor: [
       {key:'name', label:'名前', type:'text', required:true},
@@ -533,14 +533,14 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       {key:'substats', label:'サブステータス', type:'list', help:'必要なだけ行を追加できます。', full:true},
       RECIPE_FIELD,
       {key:'setBonus', label:'セットボーナス', type:'textarea'},
-      {key:'notes', label:'備考欄', type:'textarea', full:true}
+      {key:'notes', label:'備考欄', type:'textarea', full:true, detail:true}
     ],
     item: [
       {key:'name', label:'名前', type:'text', required:true},
       TAG_FIELD,
       {key:'appearance', label:'見た目', type:'textarea'},
       {key:'effect', label:'効果', type:'textarea'},
-      {key:'notes', label:'備考欄', type:'textarea', full:true}
+      {key:'notes', label:'備考欄', type:'textarea', full:true, detail:true}
     ]
   };
 
@@ -629,12 +629,12 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     state.entries[catKey].forEach(function(e){ (e.tags||[]).forEach(function(t){ set[t]=true; }); });
     return Object.keys(set).sort(function(a,b){ return a.localeCompare(b,'ja'); });
   }
-  function showInfoModal(title, text){
+  function openDetailModal(title, bodyHtml){
     var root = document.getElementById('modalRoot');
     var veil = el(
       '<div class="modal-veil"><div class="confirm-card info-card">'+
       '<h3>'+esc(title)+'</h3>'+
-      '<div class="info-body">'+esc(text||'（内容は登録されていません）')+'</div>'+
+      '<div class="info-body">'+bodyHtml+'</div>'+
       '<div class="confirm-actions"><button class="btn btn-primary" data-act="close">閉じる</button></div>'+
       '</div></div>'
     );
@@ -642,6 +642,9 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     function close(){ veil.remove(); }
     veil.addEventListener('click', function(e){ if(e.target===veil) close(); });
     veil.querySelector('[data-act=close]').addEventListener('click', close);
+  }
+  function showInfoModal(title, text){
+    openDetailModal(title, esc(text||'（内容は登録されていません）'));
   }
 
   /* ===================== render dispatch ===================== */
@@ -1067,7 +1070,7 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
       list.forEach(function(e){
         tbody += '<tr>';
         schema.forEach(function(f, idx){
-          tbody += (f.key==='notes') ? renderNotesCell(e) : renderCell(f, e[f.key], idx===0);
+          tbody += f.detail ? renderDetailCell(f, e) : renderCell(f, e[f.key], idx===0);
         });
         tbody += '<td class="cell-muted num" style="white-space:nowrap">'+fmtDate(e.updatedAt)+'</td>';
         tbody += '<td class="cell-actions">'+
@@ -1094,11 +1097,24 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     });
     var clearTagBtn = wrap.querySelector('[data-tag-filter-clear]');
     if(clearTagBtn){ clearTagBtn.addEventListener('click', function(){ state.tagFilter[cat.key]=[]; renderContent(); }); }
-    wrap.querySelectorAll('[data-view-notes]').forEach(function(td){
+    wrap.querySelectorAll('[data-view-detail]').forEach(function(td){
       td.addEventListener('click', function(){
-        var id = td.getAttribute('data-view-notes');
+        var parts = td.getAttribute('data-view-detail').split('|');
+        var fieldKey = parts[0], id = parts[1];
         var entry = findEntry(cat.key, id);
-        if(entry) showInfoModal((entry.name||'(名称未設定)')+'の備考欄', entry.notes||'');
+        if(!entry) return;
+        var field = schema.filter(function(f){ return f.key===fieldKey; })[0];
+        if(!field) return;
+        var title = (entry.name||'(名称未設定)')+'の'+field.label;
+        if(field.type==='pairlist'){
+          var pairs = (entry[fieldKey]||[]).filter(function(p){ return p&&(pairName(p)||pairDesc(p)); });
+          var bodyHtml = pairs.length ? pairs.map(function(p){
+            return '<div class="pair-chip"><div class="pn">'+esc(pairName(p))+'</div><div class="pd">'+esc(pairDesc(p))+'</div></div>';
+          }).join('') : esc('（内容は登録されていません）');
+          openDetailModal(title, bodyHtml);
+        } else {
+          showInfoModal(title, entry[fieldKey]||'');
+        }
       });
     });
     wrap.querySelectorAll('[data-edit]').forEach(function(b){
@@ -1149,12 +1165,24 @@ const FIREBASE_NOT_CONFIGURED = firebaseConfig.apiKey === "YOUR_API_KEY";
     if(!val) return '<td class="cell-muted">'+(isName?'(名称未設定)':'—')+'</td>';
     return '<td class="'+(isName?'cell-name':'cell-wrap')+'">'+esc(val)+'</td>';
   }
-  function renderNotesCell(e){
-    var val = e.notes;
+  // Fields flagged `detail:true` in their schema render as a short preview
+  // + "詳細を見る" in the table, instead of the full content inline — used
+  // for anything that can grow long (notes, skills, ...).
+  function renderDetailCell(f, e){
+    var val = e[f.key];
+    if(f.type==='pairlist'){
+      var pairs = (val||[]).filter(function(p){ return p&&(pairName(p)||pairDesc(p)); });
+      if(pairs.length===0) return '<td class="cell-muted">—</td>';
+      var names = pairs.map(pairName).filter(Boolean).slice(0,3).join('、');
+      var preview = pairs.length+'件：'+names+(pairs.length>3?' 他':'');
+      return '<td class="cell-detail" data-view-detail="'+f.key+'|'+e.id+'" title="クリックして全文を表示">'+
+        '<span class="detail-preview">'+esc(preview)+'</span>'+
+        '<span class="notes-open-hint">詳細を見る</span></td>';
+    }
     if(!val) return '<td class="cell-muted">—</td>';
-    var short = val.length>36 ? val.slice(0,36)+'…' : val;
-    return '<td class="cell-notes" data-view-notes="'+e.id+'" title="クリックして全文を表示">'+
-      '<span class="notes-preview">'+esc(short)+'</span>'+
+    var short = String(val).length>36 ? String(val).slice(0,36)+'…' : val;
+    return '<td class="cell-detail" data-view-detail="'+f.key+'|'+e.id+'" title="クリックして全文を表示">'+
+      '<span class="detail-preview">'+esc(short)+'</span>'+
       '<span class="notes-open-hint">詳細を見る</span></td>';
   }
 
